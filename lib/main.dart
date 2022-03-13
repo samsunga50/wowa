@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "ceb.dart";
 
 void main() {
   runApp(const MaterialApp(
@@ -48,7 +49,8 @@ class MyCustomForm extends StatelessWidget {
               hintText: 'Enter number of kWh used',
             ),
             onChanged: (text) {
-              print('First text field: $text');
+              var c = calculateCharge(text);
+              print('Charge: $c');
             },
           ),
         ),
