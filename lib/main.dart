@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import "ceb.dart";
 
+double c = 0;
+
 void main() {
   runApp(const MaterialApp(
-    title: 'Flutter Tutorial',
+    title: 'CEB Bill Calculator',
     home: MyApp(),
     debugShowCheckedModeBanner: false,
   ));
@@ -28,13 +31,15 @@ class _State extends State<MyApp> {
           style: TextStyle(color: Color.fromARGB(255, 221, 115, 15)),
         )),
       ),
-      body: const MyCustomForm(),
+      body: MyCustomForm(),
     );
   }
 }
 
 class MyCustomForm extends StatelessWidget {
-  const MyCustomForm({Key? key}) : super(key: key);
+  MyCustomForm({Key? key}) : super(key: key);
+
+  final ValueNotifier<double> _charge = ValueNotifier<double>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +54,38 @@ class MyCustomForm extends StatelessWidget {
               hintText: 'Enter number of kWh used',
             ),
             onChanged: (text) {
-              var c = calculateCharge(text);
+              c = calculateCharge(text);
+              c = double.parse(c.toStringAsFixed(2));
               print('Charge: $c');
+              _charge.value = c;
             },
           ),
         ),
+        ValueListenableBuilder<double>(
+            builder: (BuildContext context, double value, Widget? child) {
+              // This builder will only get called when the _counter
+              // is updated.
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context)
+                              .style
+                              .apply(fontSizeFactor: 2.0),
+                          children: <TextSpan>[
+                        const TextSpan(text: 'Charge is '),
+                        TextSpan(text: 'Rs $value'),
+                      ])),
+                  child!,
+                ],
+              );
+            },
+            valueListenable: _charge,
+            // The child parameter is most helpful if the child is
+            // expensive to build and does not depend on the value from
+            // the notifier.
+            child: const Text("only."))
       ],
     );
   }
