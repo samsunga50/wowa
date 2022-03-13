@@ -56,7 +56,6 @@ class MyCustomForm extends StatelessWidget {
             onChanged: (text) {
               c = calculateCharge(text);
               c = double.parse(c.toStringAsFixed(2));
-              print('Charge: $c');
               _charge.value = c;
             },
           ),
